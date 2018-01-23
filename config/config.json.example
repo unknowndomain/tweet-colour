@@ -3,5 +3,7 @@
 	"consumer_secret": "",
 	"token": "",
 	"token_secret": "",
-	"keywords": "#hashtag"
+	"keywords": "#test",
+	"startChannel": 1,
+	"artnetHost": "255.255.255.255"
 }

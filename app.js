@@ -1,7 +1,9 @@
+var config = require( './config/config.json' );
+
 var Twitter = require( 'node-twitter' );
 var fs = require( 'fs' );
-
-var config = require( './config/config.json' );
+var onecolor = require( 'onecolor' );
+var artnet = require( 'artnet' )( { host: config.artnetHost, sendAll: true } );
 
 var tweetEx = /^(#\w+){0,1} ?([A-z|\s]+) ?(#\w+){0,1}$/;
 
@@ -24,14 +26,10 @@ var colours = {};
 for ( var l in lines ) {
 	var line = lines[l].split(',');
 	var name = line[0].trim().toLowerCase();
-	var hex = line[1].trim().substring( 1 );
-	var r = parseInt( '0x' + hex.substring( 0, 2 ) );
-	var g = parseInt( '0x' + hex.substring( 2, 4 ) );
-	var b = parseInt( '0x' + hex.substring( 4, 6 ) );
-	colours[ name ] = { r: r, g: g, b: b };
+	colours[ name ] = onecolor( line[1].trim().substring( 1 ) );
 }
 
-setInterval( display, 10000 );
+setInterval( display, 1000 );
 display();
 
 twitterStreamClient.on( 'close', function() {
@@ -59,7 +57,7 @@ twitterStreamClient.on( 'tweet', function( tweet ) {
 
 		if ( colours[colour] ) {
 			var rgb = colours[colour];
-			console.log( 'Colour R:' + rgb.r + ' G: ' + rgb.g + ' B: ' + rgb.b );
+			console.log( 'Colour R:' + rgb.red() + ' G: ' + rgb.green() + ' B: ' + rgb.blue() );
 			tweets.push( rgb );
 		}
 	}
@@ -69,10 +67,16 @@ function display() {
 	var rgb = tweets.pop();
 
 	if ( rgb ) {
-		console.log( 'Displaying R:' + rgb.r + ' G: ' + rgb.g + ' B: ' + rgb.b + ' at location: ' + ( location + 1 ) );
+		var address = config.startChannel + ( location * 3 );
+
+		var red = rgb.red() * 255;
+		var green = rgb.green() * 255;
+		var blue = rgb.blue() * 255;
+
+		artnet.set( address, [ red, green, blue ] );
+
 		location++;
 		if ( location >= locations ) location = 0;
-		// Do something
 	}
 }
 
