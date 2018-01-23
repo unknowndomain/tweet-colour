@@ -1,11 +1,15 @@
-var tweetEx = /^(#\w+){0,1} ?([A-z|\s]+) ?(#\w+){0,1}$/;
+var Twitter = require( 'node-twitter' );
+var fs = require( 'fs' );
 
 var config = require( './config/config.json' );
+
+var tweetEx = /^(#\w+){0,1} ?([A-z|\s]+) ?(#\w+){0,1}$/;
 
 var connect_time = 1000;
 var tweets = [];
 
-var Twitter = require( 'node-twitter' );
+var location = 0;
+var locations = 3;
 
 var twitterStreamClient = new Twitter.StreamClient(
 	config.consumer_key,
@@ -13,6 +17,22 @@ var twitterStreamClient = new Twitter.StreamClient(
 	config.token,
 	config.token_secret
 );
+
+var file = fs.readFileSync( './colours.csv' ).toString();
+var lines = file.split( '\n' );
+var colours = {};
+for ( var l in lines ) {
+	var line = lines[l].split(',');
+	var name = line[0].trim().toLowerCase();
+	var hex = line[1].trim().substring( 1 );
+	var r = parseInt( '0x' + hex.substring( 0, 2 ) );
+	var g = parseInt( '0x' + hex.substring( 2, 4 ) );
+	var b = parseInt( '0x' + hex.substring( 4, 6 ) );
+	colours[ name ] = { r: r, g: g, b: b };
+}
+
+setInterval( display, 10000 );
+display();
 
 twitterStreamClient.on( 'close', function() {
 	console.log( 'Connection closed.' );
@@ -32,23 +52,26 @@ twitterStreamClient.on( 'error', function( error ) {
 twitterStreamClient.on( 'tweet', function( tweet ) {
 	connect_time = 1000;
 
-	console.log( tweet.text );
-	if ( tweet.text.match( tweetEx ) ) {
+	var match = tweet.text.match( tweetEx );
+	if ( match ) {
 		console.log( 'Tweet detected: ' + tweet.text );
-		tweets.push( tweet.text );
+		var colour = match[2].trim().toLowerCase();
+
+		if ( colours[colour] ) {
+			var rgb = colours[colour];
+			console.log( 'Colour R:' + rgb.r + ' G: ' + rgb.g + ' B: ' + rgb.b );
+			tweets.push( rgb );
+		}
 	}
 } );
 
-function startDisplaying() {
-	setInterval( display, 10000 );
-	display();
-}
-
 function display() {
-	var str = tweets.pop();
+	var rgb = tweets.pop();
 
-	if ( str ) {
-		console.log( 'Displaying: "' + str + '"' );
+	if ( rgb ) {
+		console.log( 'Displaying R:' + rgb.r + ' G: ' + rgb.g + ' B: ' + rgb.b + ' at location: ' + ( location + 1 ) );
+		location++;
+		if ( location >= locations ) location = 0;
 		// Do something
 	}
 }
