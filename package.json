@@ -1,0 +1,31 @@
+{
+  "name": "tweet-colour",
+  "version": "1.0.0",
+  "description": "Utilises Wikipedia's colour lists to make a Twitter bot that is responsive to colour names and sends out the result via ArtNet to a DMX device.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unknowndomain/tweet-colour.git"
+  },
+  "keywords": [
+    "twitter",
+    "colour",
+    "art-net",
+    "dmx",
+    "artnet",
+    "color",
+    "wikipedia"
+  ],
+  "author": "Tom Lynch",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/unknowndomain/tweet-colour/issues"
+  },
+  "homepage": "https://github.com/unknowndomain/tweet-colour#readme",
+  "dependencies": {
+    "node-twitter": "^0.5.3"
+  }
+}
