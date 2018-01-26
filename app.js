@@ -3,7 +3,11 @@ var config = require( './config/config.json' );
 var Twitter = require( 'node-twitter' );
 var fs = require( 'fs' );
 var onecolor = require( 'onecolor' );
-var artnet = require( 'artnet' )( { host: config.artnetHost, sendAll: true } );
+var artnet = require( 'artnet' )( {
+	iface: config.artnetInterface,
+	host: config.artnetHost,
+	sendAll: true
+} );
 
 var tweetEx = /^(#\w+){0,1} ?([A-z|\s]+) ?(#\w+){0,1}$/;
 

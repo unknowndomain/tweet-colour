@@ -5,5 +5,7 @@
 	"token_secret": "",
 	"keywords": "#test",
 	"startChannel": 1,
+	"artnetInterface": "10.0.0.1",
 	"artnetHost": "255.255.255.255"
+}
 }
