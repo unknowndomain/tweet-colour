@@ -24,7 +24,7 @@ var twitterStreamClient = new Twitter.StreamClient(
 	config.token_secret
 );
 
-var file = fs.readFileSync( './colours.csv' ).toString();
+var file = fs.readFileSync( './colours.csv' ).toString().trim();
 var lines = file.split( '\n' );
 var colours = {};
 for ( var l in lines ) {
