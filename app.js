@@ -48,7 +48,7 @@ twitterStreamClient.on( 'end', function() {
 
 twitterStreamClient.on( 'error', function( error ) {
 	console.log( 'Error: ' + ( error.code ? error.code + ' ' + error.message : error.message ) );
-
+	reconnect();
 } );
 
 twitterStreamClient.on( 'tweet', function( tweet ) {
